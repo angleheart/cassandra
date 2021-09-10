@@ -1,0 +1,8 @@
+ACCESS_KEY=marketstackaccesskeygoeshere
+
+DATABASE_URL=jdbc:mysql://
+DATABASE_SERVER=localhost
+DATABASE_PORT=3306
+DATABASE_NAME=StockMarket
+DATABASE_USERNAME=username
+DATABASE_PASSWORD=password
