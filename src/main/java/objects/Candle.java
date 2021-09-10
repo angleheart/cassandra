@@ -1,8 +1,12 @@
 package objects;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import static console.ConsoleUtil.cleanDouble;
 
 public class Candle {
 
@@ -12,7 +16,7 @@ public class Candle {
     private final double close;
     private final double volume;
     private final Date date;
-    private final Map<Integer, Double> simpleMovingAverages;
+    private final Map<Integer, Double> simpleMovingAverages = new HashMap<>();
 
     public Candle(
             double open,
@@ -28,7 +32,6 @@ public class Candle {
         this.close = close;
         this.volume = volume;
         this.date = date;
-        this.simpleMovingAverages = new HashMap<>();
     }
 
     public double getOpen() {
@@ -57,6 +60,24 @@ public class Candle {
 
     public void setSma(int period, double value){
         simpleMovingAverages.put(period, value);
+    }
+
+    public double getSma(int period){
+        return simpleMovingAverages.get(period);
+    }
+
+    public double getSMAStretch(int period) {
+        double sma = simpleMovingAverages.get(period);
+        return Double.parseDouble(
+                cleanDouble(
+                        (close - sma)/sma,
+                        3
+                )
+        );
+    }
+
+    public boolean hasMovingAverage(int period){
+        return simpleMovingAverages.containsKey(period);
     }
 
 }

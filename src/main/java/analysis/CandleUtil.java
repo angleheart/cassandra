@@ -1,26 +1,31 @@
 package analysis;
 
 import objects.Candle;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
+
+import static util.NumberUtil.roundDouble;
 
 public class CandleUtil {
 
     public static void applySimpleMovingAverage(List<Candle> candles, int period) {
-        BigDecimal sum = new BigDecimal(0);
-        sum = sum.setScale(8, RoundingMode.HALF_UP);
+        double sum = 0;
+        int index = 0;
+        do{
+            sum+=candles.get(index).getClose();
+            index++;
+        }while(index+1 < period);
 
-        for (int i = 0; i < candles.size(); i++) {
-            Candle candle = candles.get(i);
-            sum = sum.add(BigDecimal.valueOf(candle.getClose()));
-            if (i < period - 1)
-                continue;
-            BigDecimal smaVal = sum.divide(BigDecimal.valueOf(period), RoundingMode.HALF_UP);
-            candles.get(i).setSma(period, smaVal.doubleValue());
-            sum = sum.subtract(BigDecimal.valueOf(candles.get((i + 1) - period).getClose()));
+        while(index < candles.size()){
+            candles.get(index).setSma(period, roundDouble(sum/period));
+            sum-=candles.get(index+1-period).getClose();
+            index++;
+            if (index < candles.size())
+                sum+=candles.get(index).getClose();
         }
     }
+
+
+
+
 
 }
